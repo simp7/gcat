@@ -48,9 +48,10 @@ func main() {
 		input = io.MultiReader(readers...)
 	}
 
-	if *isNumbered {
+	if *isNonBlankNumbered {
+		f = formatter.NonBlankNumbered(input)
+	} else if *isNumbered {
 		f = formatter.Numbered(input)
-	} else if *isNonBlankNumbered {
 	} else {
 		f = formatter.Standard(input)
 	}
