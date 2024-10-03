@@ -31,16 +31,21 @@ func main() {
 	if len(args) == 1 {
 		input = os.Stdin
 	} else {
-		if args[1] == "-" {
-			input = os.Stdin
-		} else {
-			file, err := os.Open(args[1])
-			if err != nil {
-				exitWithError(err)
-				return
+		files := args[1:]
+		readers := make([]io.Reader, len(files))
+		for index, name := range files {
+			if name == "-" {
+				readers[index] = os.Stdin
+			} else {
+				file, err := os.Open(name)
+				if err != nil {
+					exitWithError(err)
+					return
+				}
+				readers[index] = file
 			}
-			input = file
 		}
+		input = io.MultiReader(readers...)
 	}
 
 	if *isNumbered {
