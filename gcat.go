@@ -24,14 +24,14 @@ func main() {
 
 	output = os.Stdout
 
-	args := os.Args
 	isNumbered := flag.Bool("n", false, "Number the output lines, starting at 1.")
 	isNonBlankNumbered := flag.Bool("b", false, "Number the non-blank output lines, starting at 1.")
+	flag.Parse()
+	files := flag.Args()
 
-	if len(args) == 1 {
+	if len(files) == 0 {
 		input = os.Stdin
 	} else {
-		files := args[1:]
 		readers := make([]io.Reader, len(files))
 		for index, name := range files {
 			if name == "-" {
@@ -49,6 +49,7 @@ func main() {
 	}
 
 	if *isNumbered {
+		f = formatter.Numbered(input)
 	} else if *isNonBlankNumbered {
 	} else {
 		f = formatter.Standard(input)
