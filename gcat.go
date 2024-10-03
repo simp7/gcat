@@ -25,19 +25,22 @@ func main() {
 	output = os.Stdout
 
 	args := os.Args
-	isStdIn := flag.Bool("", false, "Get text from standard input.")
 	isNumbered := flag.Bool("n", false, "Number the output lines, starting at 1.")
 	isNonBlankNumbered := flag.Bool("b", false, "Number the non-blank output lines, starting at 1.")
 
-	if len(args) == 1 || *isStdIn {
+	if len(args) == 1 {
 		input = os.Stdin
 	} else {
-		file, err := os.Open(args[1])
-		if err != nil {
-			exitWithError(err)
-			return
+		if args[1] == "-" {
+			input = os.Stdin
+		} else {
+			file, err := os.Open(args[1])
+			if err != nil {
+				exitWithError(err)
+				return
+			}
+			input = file
 		}
-		input = file
 	}
 
 	if *isNumbered {
